@@ -1,6 +1,6 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: cursive;
     background-color: #f0f8ff;
     color: #333;
     margin: 0;
@@ -24,10 +24,13 @@ h2 {
 ul {
     list-style-type: none;
     padding: 0;
-    max-height: 70vh;
+    max-height: 48vh;
     overflow-y: auto;
     margin-top: 2rem;
     padding-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
 }
 
@@ -41,6 +44,7 @@ li {
     justify-content: space-between;
     align-items: center;
     transition: box-shadow 0.3s;
+    width: 300px;
 }
 
 li:hover {
@@ -109,9 +113,9 @@ button:hover {
     background-color: white;
     border-radius: 8px;
     padding: 20px;
-    width: 300px;
+    width: 245px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    height: 270px;
+    height: 207px;
 }
 
 .pokemon-card h2 {
@@ -138,4 +142,37 @@ button:hover {
 
 .pokemon-card button:hover {
     background-color: #e04e4e;
+}
+.poc-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #FFB6C1;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.poc-name:hover {
+    color: #ffffff;
+    background-color: #FFB6C1;
+    border: 2px solid #FFB6C1;
+    transform: scale(1.1);
+}
+
+.poc-name:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.favorites-filter{
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+}
+.loading-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 7em;
 }

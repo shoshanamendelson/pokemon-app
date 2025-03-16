@@ -1,8 +1,18 @@
 
-export const fetchPokemonFromApi = async () => {
-    const res = await fetch("http://localhost:5000/api/pokemon");
+export const fetchPokemonFromApi = async (searchQuery = "") => {
+    const url = searchQuery
+        ? `http://localhost:5000/api/pokemon/${searchQuery}`
+        : "http://localhost:5000/api/pokemon";
+
+    const res = await fetch(url);
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch Pokémon");
+    }
+
     return await res.json();
 };
+
 
 export const fetchFavoritesFromApi = async () => {
     const res = await fetch("http://localhost:5000/api/favorites");

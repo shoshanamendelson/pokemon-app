@@ -6,7 +6,6 @@ import {
     removeFavoriteFromApi,
     fetchPokemonDetailsFromApi
 } from '../Services/PokemonService';
-import CustomToast from "../components/CustomToast/CustomToast";
 
 class PokemonStore {
     pokemonList = [];
@@ -14,6 +13,7 @@ class PokemonStore {
     selectedPokemon = null; // Stores the details of the selected Pokémon
     isloading = false;
     isloadingDetails = false;
+    searchQuery = '';
 
     constructor() {
         makeAutoObservable(this, {
@@ -28,10 +28,14 @@ class PokemonStore {
             fetchPokemonDetails: action,
             setLoading: action,
             setLoadingDetails: action,
-            isloadingDetails: observable
+            isloadingDetails: observable,
+            searchQuery: observable,
+            setSearchQuery: action,
         });
     }
-
+    setSearchQuery(query) {
+        this.searchQuery = query;
+    }
     setLoading(isLoading) {
         this.isloading = isLoading;
     }
@@ -42,33 +46,29 @@ class PokemonStore {
 
     // Fetch Pokémon list from the API
     async fetchPokemon() {
-        this.setLoading(true); // Set loading to true before making the request
+
+        this.setLoading(true);
         try {
-            // If pokemonList is empty, fetch both Pokémon and favorites
-            if (this.pokemonList.length === 0) {
-                this.fetchFavorites();
-                const data = await fetchPokemonFromApi();
-                // Add 'isFavorite' flag for each Pokémon
-                const pokemonWithFavorite = data.results.map(pokemon => {
-                    const isFavorite = this.favorites.includes(pokemon.name);
-                    return { ...pokemon, isFavorite };
-                });
+            const data = await fetchPokemonFromApi(this.searchQuery);
+            console.log(data, 'data');  // It's important to check the data returned from the API
 
-                this.pokemonList = pokemonWithFavorite; // Update the Pokémon list with the 'isFavorite' status
-            } else {
-                // If Pokémon list already exists, just update the 'isFavorite' status
-                this.pokemonList = this.pokemonList.map(pokemon => {
-                    const isFavorite = this.favorites.includes(pokemon.name);
-                    return { ...pokemon, isFavorite };
-                });
-            }
+            // If results is an object, turn it into an array
+            const results = Array.isArray(data.results) ? data.results : [data];
 
+            const pokemonWithFavorite = results.map(pokemon => ({
+                ...pokemon,
+                isFavorite: this.favorites.includes(pokemon.name),
+            }));
+
+            this.pokemonList = pokemonWithFavorite;
         } catch (error) {
             console.error("Error fetching Pokémon:", error);
         } finally {
-            this.setLoading(false); // Set loading to false after request is complete
+            this.setLoading(false);
         }
     }
+
+
 
     // Fetch the list of favorites from the backend
     async fetchFavorites() {
