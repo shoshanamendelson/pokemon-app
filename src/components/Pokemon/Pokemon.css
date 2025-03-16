@@ -1,0 +1,141 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.title {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #ff6363	;
+}
+
+h2 {
+    margin-top: 30px;
+    color: #ff6363;	;
+}
+
+/* List Styles */
+ul {
+    list-style-type: none;
+    padding: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+
+}
+
+li {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.3s;
+}
+
+li:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Button Styles */
+button {
+    background-color: grey;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff6363	;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    font-size: 1.5em;
+    color: #ff6363;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .title {
+        font-size: 2em;
+    }
+
+    li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}/* עיצוב כרטיס הפוקימון */
+.pokemon-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.pokemon-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    height: 270px;
+}
+
+.pokemon-card h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.pokemon-card ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.pokemon-card button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px;
+    background-color: #ff6363;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pokemon-card button:hover {
+    background-color: #e04e4e;
+}
