@@ -1,26 +1,9 @@
-import React, { useCallback } from "react";
-import { observer } from "mobx-react";
-import pokemonStore from "../PokemonStore";
-import "./SearchPokemon.css";
+import React from 'react';
+import { observer } from 'mobx-react';
+import pokemonStore from '../PokemonStore';
+import './SearchPokemon.css';
 
 const SearchPokemon = observer(() => {
-    // Memoized function to handle search
-    const handleSearch = useCallback(() => {
-            pokemonStore.fetchPokemon(pokemonStore.searchQuery);
-    }, []);
-
-    // Handle input change with useCallback
-    const handleInputChange = useCallback((e) => {
-        pokemonStore.setSearchQuery(e.target.value);
-    }, []);
-
-    // Trigger search when pressing Enter
-    const handleKeyPress = (e) => {
-        if (e.key === "Enter") {
-            handleSearch();
-        }
-    };
-
     return (
         <div className="search-container">
             <div className="search-input-container">
@@ -29,14 +12,25 @@ const SearchPokemon = observer(() => {
                     type="text"
                     placeholder="Enter the full Pokémon name..."
                     value={pokemonStore.searchQuery}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyPress}
+                    onChange={(e) => pokemonStore.setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            pokemonStore.fetchPokemon();
+                        }
+                    }}
                     className="search-input"
                 />
-                <button onClick={handleSearch} className="search-button">
+                <button onClick={() => pokemonStore.fetchPokemon()} className="search-button">
                     Search
                 </button>
             </div>
+
+            {/* Display Toast message */}
+            {pokemonStore.toastMessage && (
+                <div className={`toast ${pokemonStore.toastType}`}>
+                    {pokemonStore.toastMessage}
+                </div>
+            )}
         </div>
     );
 });

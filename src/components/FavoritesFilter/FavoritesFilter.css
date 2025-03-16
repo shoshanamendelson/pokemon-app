@@ -1,0 +1,31 @@
+.favorites-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.favorites-button {
+
+    margin-top: 20px;
+    background-color: lightgray;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorites-button:hover {
+    background-color: darkgray;
+}
+
+.favorites-icon {
+    font-size: 24px;
+    color: black;
+}
+
+.favorites-icon.filled {
+    color: gold;
+}

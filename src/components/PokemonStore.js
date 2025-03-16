@@ -10,16 +10,18 @@ import {
 class PokemonStore {
     pokemonList = [];
     favorites = [];
-    selectedPokemon = null; // Stores the details of the selected Pokémon
-    isloading = false;
-    isloadingDetails = false;
+    selectedPokemon = null;
+    isLoading = false;
+    isLoadingDetails = false;
     searchQuery = '';
+    toastMessage = ''; // Stores the toast message
+    toastType = ''; // Stores the type of the toast (e.g. success or error)
 
     constructor() {
         makeAutoObservable(this, {
             pokemonList: observable,
             favorites: observable,
-            isloading: observable,
+            isLoading: observable,
             selectedPokemon: observable,
             fetchPokemon: action,
             fetchFavorites: action,
@@ -28,31 +30,53 @@ class PokemonStore {
             fetchPokemonDetails: action,
             setLoading: action,
             setLoadingDetails: action,
-            isloadingDetails: observable,
+            isLoadingDetails: observable,
             searchQuery: observable,
             setSearchQuery: action,
+            toastMessage: observable,
+            toastType: observable,
+            setToastMessage: action,
+            setToastType: action,
+            showToast: action,
         });
     }
+
     setSearchQuery(query) {
         this.searchQuery = query;
     }
+
     setLoading(isLoading) {
-        this.isloading = isLoading;
+        this.isLoading = isLoading;
     }
 
     setLoadingDetails(isLoading) {
-        this.isloadingDetails = isLoading;
+        this.isLoadingDetails = isLoading;
+    }
+
+    setToastMessage(message) {
+        this.toastMessage = message;
+    }
+
+    setToastType(type) {
+        this.toastType = type;
+    }
+
+    // Function to show toast message for a certain time
+    showToast(message, type = 'success') {
+        this.setToastMessage(message);
+        this.setToastType(type);
+
+        setTimeout(() => {
+            this.setToastMessage('');
+            this.setToastType('');
+        }, 3000); // Message disappears after 3 seconds
     }
 
     // Fetch Pokémon list from the API
     async fetchPokemon() {
-
         this.setLoading(true);
         try {
             const data = await fetchPokemonFromApi(this.searchQuery);
-            console.log(data, 'data');  // It's important to check the data returned from the API
-
-            // If results is an object, turn it into an array
             const results = Array.isArray(data.results) ? data.results : [data];
 
             const pokemonWithFavorite = results.map(pokemon => ({
@@ -62,7 +86,9 @@ class PokemonStore {
 
             this.pokemonList = pokemonWithFavorite;
         } catch (error) {
-            console.error("Error fetching Pokémon:", error);
+            this.showToast(`${error.message}`, "error");
+            console.error("No pokemons found", error);
+            this.pokemonList= [];
         } finally {
             this.setLoading(false);
         }
@@ -85,8 +111,11 @@ class PokemonStore {
         try {
             await addFavoriteToApi(pokemon);
             this.fetchFavorites(); // Refresh the favorites list after adding
+            this.showToast(`${pokemon} was added to your favorites!`, "success");
+
         } catch (error) {
             console.error("Error adding favorite:", error);
+            this.showToast(`Failed to add ${pokemon} to favorites. Please try again!`, "error");
         }
     }
 
@@ -95,11 +124,14 @@ class PokemonStore {
         try {
             // Send a DELETE request to remove the Pokémon from favorites
             await removeFavoriteFromApi(pokemonName);
-
             // Refresh the favorites list after removing
-            this.fetchFavorites();
+            await this.fetchFavorites();
+            this.showToast(`${pokemonName} was removed from your favorites!`, "success");
+
         } catch (error) {
             console.error("Error removing favorite:", error);
+            this.showToast(`Failed to remove ${pokemonName} from favorites. Please try again!`, "error");
+
         }
     }
 
@@ -109,8 +141,11 @@ class PokemonStore {
         try {
             const data = await fetchPokemonDetailsFromApi(pokemonName);
             this.selectedPokemon = data; // Store the selected Pokémon details
+            this.showToast(`Successfully fetched details for ${pokemonName}!`, "success");
+
         } catch (error) {
-            console.error("Error fetching Pokémon details:", error);
+            this.showToast(`Failed to fetch details for ${pokemonName}. Please try again!`, "error");
+            console.error(`Failed to fetch details for ${pokemonName}. Please try again!`, error);
         } finally {
             this.setLoadingDetails(false); // Set loading to false after request is complete
         }

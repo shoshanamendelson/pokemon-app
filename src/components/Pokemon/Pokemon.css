@@ -93,8 +93,11 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-}/* עיצוב כרטיס הפוקימון */
+    height: 50vh;
+}
+.red-spinner .ant-spin-dot i {
+    background-color: red !important;
+}
 .pokemon-details {
     display: flex;
     justify-content: center;
@@ -175,4 +178,11 @@ button:hover {
     display: flex;
     justify-content: center;
     margin-top: 7em;
+}
+.no-data {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FFB6C1;
+    margin-top: 20px;
 }

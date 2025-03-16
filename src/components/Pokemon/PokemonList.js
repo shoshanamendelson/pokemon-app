@@ -4,13 +4,13 @@ import pokemonStore from "../PokemonStore";
 import './Pokemon.css';
 import {Spin, Tooltip} from 'antd';
 import PokemonDetails from "../PokemonDetails/PokemonDetails";
-import ToastDemo from "../CustomToast/CustomToast";
+import '../CustomToast/CustomToast.css'
 import {ReactComponent as WavesSvg} from "../../logo.svg";
 
 import {
     StarOutlined,
 } from '@ant-design/icons';
-import FavoritesFilter from "./FavoritesFilter";
+import FavoritesFilter from "../FavoritesFilter/FavoritesFilter";
 
 const PokemonList = observer(() => {
     const [showDetails, setShowDetails] = useState(false);
@@ -38,7 +38,7 @@ const PokemonList = observer(() => {
 
     const renderLoading = () => (
         <div className="spinner-container">
-            <Spin size="large" tip="Loading Pokémon..."/>
+            <Spin size="large" tip="Loading Pokémon..." className="red-spinner" />
         </div>
     );
 
@@ -47,25 +47,30 @@ const PokemonList = observer(() => {
     };
 
     const renderPokemonList = () => (
-        <ul>
-            {filteredPokemonList?.map((pokemon, index) => (
-                <li key={pokemon?.url}>
-                    <Tooltip title={'Click here to get all details'}>
-                        <div className='poc-name' onClick={() => handlePokemonClick(pokemon?.name)}>
-                            {pokemon?.name}
-                        </div>
-                    </Tooltip>
+        filteredPokemonList.length === 0 ? (
+            <div className="no-data">No Pokémon found! 😢</div>
+        ) : (
+            <ul>
+                {filteredPokemonList.map((pokemon) => (
+                    <li key={pokemon.url}>
+                        <Tooltip title="Click here to get all details">
+                            <div className="poc-name" onClick={() => handlePokemonClick(pokemon.name)}>
+                                {pokemon.name}
+                            </div>
+                        </Tooltip>
 
-                    <button
-                        onClick={() => toggleFavorite(pokemon)}
-                        style={{backgroundColor: pokemon?.isFavorite ? 'gold' : 'lightgray'}}
-                    >
-                        {pokemon?.isFavorite ? '⭐' : <StarOutlined/>}
-                    </button>
-                </li>
-            ))}
-        </ul>
+                        <button
+                            onClick={() => toggleFavorite(pokemon)}
+                            style={{ backgroundColor: pokemon.isFavorite ? 'gold' : 'lightgray' }}
+                        >
+                            {pokemon.isFavorite ? '⭐' : <StarOutlined />}
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        )
     );
+
 
     const toggleFavorite = (pokemon) => {
         if (pokemon?.isFavorite) {
@@ -80,11 +85,6 @@ const PokemonList = observer(() => {
             <PokemonDetails setShowDetails={setShowDetails}/>
         )
     );
-
-    if (pokemonStore.isloading) {
-        return renderLoading();
-    }
-
     return (
         <div>
             <h1 className='title'>Pokemon List {<WavesSvg width="50px%" height="50px"/>} </h1>
@@ -92,8 +92,7 @@ const PokemonList = observer(() => {
                 showFavoritesOnly={showFavoritesOnly}
                 toggleFavorites={toggleFavorites}
             />
-            {renderPokemonList()}
-            <ToastDemo/>
+            {pokemonStore.isLoading?renderLoading():renderPokemonList()}
             {renderPokemonDetails()}
         </div>
     );
