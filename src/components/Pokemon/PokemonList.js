@@ -7,7 +7,6 @@ import PokemonDetails from "../PokemonDetails/PokemonDetails";
 import '../CustomToast/CustomToast.css'
 import {ReactComponent as WavesSvg} from "../../logo.svg";
 import useInfiniteScroll from 'react-infinite-scroll-hook';
-
 import {
     StarOutlined,
 } from '@ant-design/icons';
@@ -18,8 +17,8 @@ const PokemonList = observer(() => {
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false); // State for toggling favorites filter
     const [sentryRef, { rootRef }] = useInfiniteScroll({
         loading: pokemonStore.isLoading,
-        hasNextPage:  pokemonStore.pokemonList.length<150&&pokemonStore.searchQuery==='',
-        onLoadMore: ()=>pokemonStore.fetchPokemon(true),
+        hasNextPage:  pokemonStore.pokemonList.length<150&&!pokemonStore.searchMode,
+        onLoadMore: ()=>pokemonStore.fetchPokemon(),
         rootMargin: '0px 0px 50px 0px',
     })
     useEffect(() => {
@@ -52,48 +51,52 @@ const PokemonList = observer(() => {
 
 
     const renderPokemonList = () => {
-
         const pokemonList = showFavoritesOnly ? getFilteredPokemonList() : pokemonStore.pokemonList;
-        const  hasMore=pokemonStore.pokemonList.length < 120 && pokemonStore.searchQuery === '' && !pokemonStore.isLoading&&!showFavoritesOnly;
-        return <>
-        {
-            pokemonList?.length === 0&&!pokemonStore.isLoading ? (
-                <div className="no-data">No Pokémon found! 😢</div>
-            ) : (
-                pokemonStore.isLoading &&pokemonStore.pokemonList?.length === 0? renderLoading() :
-                <div style={{maxHeight: '550px', overflow: 'auto',marginLeft:'18em'}} ref={rootRef}>
-                    <ul>
-                        {pokemonList?.map((pokemon) => (
-                            <li key={pokemon.url}>
-                                <Tooltip title="Click here to get all details">
-                                    <div className="poc-name" onClick={() => handlePokemonClick(pokemon.name)}>
-                                        {pokemon.name}
-                                    </div>
-                                </Tooltip>
+        const hasMore =
+            pokemonStore.pokemonList.length < 120 &&
+            !pokemonStore.searchMode &&
+            !pokemonStore.isLoading &&
+            !showFavoritesOnly;
 
-                                <button
-                                    onClick={() => toggleFavorite(pokemon)}
-                                    style={{backgroundColor: pokemonStore.favorites.includes(pokemon.name) ? 'gold' : 'lightgray'}}
-                                >
-                                    {pokemonStore.favorites.includes(pokemon.name) ? '⭐' : <StarOutlined/>}
-                                </button>
-                            </li>
-                        ))}
+        const isEmptyList = pokemonList?.length === 0 && !pokemonStore.isLoading;
+        const isLoadingInitial = pokemonStore.isLoading && pokemonStore.pokemonList?.length === 0;
 
-                    </ul>
-                    {hasMore && (
-                        <div ref={sentryRef} style={{height: '1px'}}/>
-                    )}
-                </div>
-            )
+        if (isEmptyList) {
+            return <div className="no-data">No Pokémon found! 😢</div>;
         }
-        </>
 
+        if (isLoadingInitial) {
+            return renderLoading();
+        }
+
+        return (
+            <div className='list-container' ref={rootRef}>
+                <ul>
+                    {pokemonList?.map((pokemon) => (
+                        <li key={pokemon.url}>
+                            <Tooltip title="Click here to get all details">
+                                <div className="poc-name" onClick={() => handlePokemonClick(pokemon.name)}>
+                                    {pokemon.name}
+                                </div>
+                            </Tooltip>
+
+                            <button
+                                onClick={() => toggleFavorite(pokemon)}
+                                style={{ backgroundColor: pokemonStore.favorites.includes(pokemon.name) ? 'gold' : 'lightgray' }}
+                            >
+                                {pokemonStore.favorites.includes(pokemon.name) ? '⭐' : <StarOutlined />}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+                {hasMore && <div ref={sentryRef} style={{ height: '10px' }} />}
+            </div>
+        );
     };
 
 
     const toggleFavorite = (pokemon) => {
-        if (pokemonStore.favorites.includes(pokemon.name)) {
+        if (pokemonStore.favorites.includes(pokemon?.name)) {
             pokemonStore.removeFavorite(pokemon?.name);
         } else {
             pokemonStore.addFavorite(pokemon?.name);

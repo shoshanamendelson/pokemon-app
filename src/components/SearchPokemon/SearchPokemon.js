@@ -4,6 +4,12 @@ import pokemonStore from '../../stores/PokemonStore';
 import './SearchPokemon.css';
 
 const SearchPokemon = observer(() => {
+    const [search, setSearch] = React.useState('');
+    const handleSearch = (e) => {
+        const query = e.target.value;
+        setSearch(query);
+        pokemonStore.setSearchMode(query !== '');
+    };
     return (
         <div className="search-container">
             <div className="search-input-container">
@@ -11,11 +17,11 @@ const SearchPokemon = observer(() => {
                     id="search"
                     type="text"
                     placeholder="Enter the full Pokémon name..."
-                    value={pokemonStore.searchQuery}
-                    onChange={(e) => pokemonStore.setSearchQuery(e.target.value)}
+                    value={search}
+                    onChange={(e) => handleSearch(e)}
                     className="search-input"
                 />
-                <button onClick={() => pokemonStore.fetchPokemon()} className="search-button">
+                <button onClick={() => pokemonStore.fetchPokemon(search)} className="search-button">
                     Search
                 </button>
             </div>

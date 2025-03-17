@@ -8,7 +8,7 @@ const PokemonDetails = observer(({ setShowDetails }) => {
     const { isloadingDetails, selectedPokemon } = pokemonStore;
 
     const formatList = (items, key) => {
-        return items.map((item) => item[key].name).join(", ");
+        return items?.map((item) => item[key]?.name).join(", ");
     };
 
     const PokemonInfoList = ({ title, items, keyName }) => {

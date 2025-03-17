@@ -13,7 +13,7 @@ class PokemonStore {
     selectedPokemon = null;
     isLoading = true;
     isLoadingDetails = false;
-    searchQuery = '';
+    searchMode = false;
     toastMessage = ''; // Stores the toast message
     toastType = ''; // Stores the type of the toast (e.g. success or error)
     page = 1;
@@ -32,8 +32,8 @@ class PokemonStore {
             setLoading: action,
             setLoadingDetails: action,
             isLoadingDetails: observable,
-            searchQuery: observable,
-            setSearchQuery: action,
+            searchMode: observable,
+            setSearchMode: action,
             toastMessage: observable,
             toastType: observable,
             setToastMessage: action,
@@ -43,8 +43,8 @@ class PokemonStore {
         });
     }
 
-    setSearchQuery(query) {
-        this.searchQuery = query;
+    setSearchMode(mode) {
+        this.searchMode = mode;
     }
 
     setLoading(isLoading) {
@@ -75,13 +75,14 @@ class PokemonStore {
     }
 
     // Fetch Pokémon list from the API
-    async fetchPokemon(fromPagination = false) {
+    async fetchPokemon(s='') {
+        console.log(s)
         this.setLoading(true);
         try {
             const offset = (this.page - 1) * 15; // Calculate offset based on page
-            const data = await fetchPokemonFromApi(this.searchQuery, 15, offset);
+            const data = await fetchPokemonFromApi(s, 15, offset);
             const results = Array.isArray(data.results) ? data.results : [data];
-            if (this.searchQuery) {
+            if (this.searchMode) {
                 this.pokemonList = results;
             } else {
                 this.pokemonList = [...this.pokemonList, ...results]

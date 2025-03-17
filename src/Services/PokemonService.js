@@ -6,11 +6,9 @@ export const fetchPokemonFromApi = async (searchQuery = "", limit = 10, offset =
         : `http://localhost:5000/api/pokemon?limit=${limit}&offset=${offset}`;
 
     const res = await fetch(url);
-
     if (!res.ok) {
         throw new Error("Failed to fetch Pokémon");
     }
-
     return await res.json();
 };
 
