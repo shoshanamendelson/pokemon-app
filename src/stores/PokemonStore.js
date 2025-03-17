@@ -1,4 +1,4 @@
-import {makeAutoObservable, observable, action} from 'mobx';
+import { makeAutoObservable, observable, action } from 'mobx';
 import {
     fetchPokemonFromApi,
     fetchFavoritesFromApi,
@@ -43,27 +43,52 @@ class PokemonStore {
         });
     }
 
+    /**
+     * Sets the search mode.
+     * If enabled, only searched Pokémon will be displayed.
+     * @param {boolean} mode - The search mode state.
+     */
     setSearchMode(mode) {
         this.searchMode = mode;
     }
 
+    /**
+     * Sets the loading state for fetching Pokémon.
+     * @param {boolean} isLoading - Whether the Pokémon list is loading.
+     */
     setLoading(isLoading) {
         this.isLoading = isLoading;
     }
 
+    /**
+     * Sets the loading state for fetching Pokémon details.
+     * @param {boolean} isLoading - Whether the details are loading.
+     */
     setLoadingDetails(isLoading) {
         this.isLoadingDetails = isLoading;
     }
 
+    /**
+     * Sets the toast message.
+     * @param {string} message - The message to be displayed.
+     */
     setToastMessage(message) {
         this.toastMessage = message;
     }
 
+    /**
+     * Sets the toast type (e.g., success or error).
+     * @param {string} type - The type of the toast message.
+     */
     setToastType(type) {
         this.toastType = type;
     }
 
-    // Function to show toast message for a certain time
+    /**
+     * Displays a toast message for a short duration.
+     * @param {string} message - The message to display.
+     * @param {string} [type='success'] - The type of the toast (default: success).
+     */
     showToast(message, type = 'success') {
         this.setToastMessage(message);
         this.setToastType(type);
@@ -74,8 +99,13 @@ class PokemonStore {
         }, 3000); // Message disappears after 3 seconds
     }
 
-    // Fetch Pokémon list from the API
-    async fetchPokemon(search='') {
+    /**
+     * Fetches the list of Pokémon from the API.
+     * If a search query is provided, fetches the corresponding Pokémon.
+     * Otherwise, fetches a paginated list.
+     * @param {string} [search=''] - The Pokémon name to search for (optional).
+     */
+    async fetchPokemon(search = '') {
         this.setLoading(true);
         try {
             const offset = (this.page - 1) * 15; // Calculate offset based on page
@@ -84,21 +114,21 @@ class PokemonStore {
             if (this.searchMode) {
                 this.pokemonList = results;
             } else {
-                this.pokemonList = [...this.pokemonList, ...results]
-
+                this.pokemonList = [...this.pokemonList, ...results];
             }
             this.page++;
         } catch (error) {
             this.showToast(`${error.message}`, "error");
-            console.error("No pokemons found", error);
+            console.error("No Pokémon found", error);
             this.pokemonList = [];
         } finally {
             this.setLoading(false);
         }
     }
 
-
-    // Fetch the list of favorites from the backend
+    /**
+     * Fetches the list of favorite Pokémon from the backend.
+     */
     async fetchFavorites() {
         try {
             const data = await fetchFavoritesFromApi();
@@ -108,43 +138,49 @@ class PokemonStore {
         }
     }
 
-    // Add a Pokémon to the favorites list
+    /**
+     * Adds a Pokémon to the favorites list.
+     * Updates the favorites list after the addition.
+     * @param {string} pokemon - The name of the Pokémon to add to favorites.
+     */
     async addFavorite(pokemon) {
         try {
             await addFavoriteToApi(pokemon);
             this.fetchFavorites(); // Refresh the favorites list after adding
             this.showToast(`${pokemon} was added to your favorites!`, "success");
-
         } catch (error) {
             console.error("Error adding favorite:", error);
             this.showToast(`Failed to add ${pokemon} to favorites. Please try again!`, "error");
         }
     }
 
-    // Remove a Pokémon from the favorites list
+    /**
+     * Removes a Pokémon from the favorites list.
+     * Updates the favorites list after the removal.
+     * @param {string} pokemonName - The name of the Pokémon to remove from favorites.
+     */
     async removeFavorite(pokemonName) {
         try {
-            // Send a DELETE request to remove the Pokémon from favorites
-            await removeFavoriteFromApi(pokemonName);
-            // Refresh the favorites list after removing
-            await this.fetchFavorites();
+            await removeFavoriteFromApi(pokemonName); // Send a DELETE request
+            await this.fetchFavorites(); // Refresh the favorites list
             this.showToast(`${pokemonName} was removed from your favorites!`, "success");
-
         } catch (error) {
             console.error("Error removing favorite:", error);
             this.showToast(`Failed to remove ${pokemonName} from favorites. Please try again!`, "error");
-
         }
     }
 
-    // Fetch the details of a selected Pokémon
+    /**
+     * Fetches details of a specific Pokémon.
+     * Updates the selected Pokémon state.
+     * @param {string} pokemonName - The name of the Pokémon to fetch details for.
+     */
     async fetchPokemonDetails(pokemonName) {
         this.setLoadingDetails(true); // Set loading to true before fetching details
         try {
             const data = await fetchPokemonDetailsFromApi(pokemonName);
             this.selectedPokemon = data; // Store the selected Pokémon details
             this.showToast(`Successfully fetched details for ${pokemonName}!`, "success");
-
         } catch (error) {
             this.showToast(`Failed to fetch details for ${pokemonName}. Please try again!`, "error");
             console.error(`Failed to fetch details for ${pokemonName}. Please try again!`, error);

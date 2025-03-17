@@ -12,22 +12,25 @@ body {
     text-align: center;
     font-size: 2.5em;
     margin-bottom: 20px;
-    color: #ff6363	;
+    color: #ff6363;
     display: flex;
     align-items: center;
     gap: 8px;
     justify-content: center;
 }
-.list-container{
+
+.list-container {
     max-height: 550px;
     overflow: auto;
-    width: 440px;
+    width: 600px;
     margin: auto;
 }
+
 h2 {
     margin-top: 30px;
-    color: #ff6363;	;
+    color: #ff6363;;
 }
+
 li {
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -38,7 +41,7 @@ li {
     justify-content: space-between;
     align-items: center;
     transition: box-shadow 0.3s;
-    width: 300px;
+    width: 500px;
 }
 
 li:hover {
@@ -57,7 +60,7 @@ button {
 }
 
 button:hover {
-    background-color: #ff6363	;
+    background-color: #ff6363;
 }
 
 /* Loading State */
@@ -83,18 +86,23 @@ button:hover {
         margin-top: 10px;
     }
 }
+
 .spinner-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50vh;
 }
+
 .red-spinner .ant-spin-dot i {
     background-color: red !important;
 }
-.spinner-scroll{
-    margin-left: 12em;
+
+.spinner-scroll {
+    display: flex;
+    justify-content: center;
 }
+
 .pokemon-details {
     display: flex;
     justify-content: center;
@@ -143,6 +151,7 @@ button:hover {
 .pokemon-card button:hover {
     background-color: #e04e4e;
 }
+
 .poc-name {
     font-size: 18px;
     font-weight: bold;
@@ -152,6 +161,7 @@ button:hover {
     padding: 5px 10px;
     border-radius: 10px;
     cursor: pointer;
+    text-shadow: 1px 1px 0 #000,  -1px -1px 0 #000,  1px -1px 0 #000,  -1px 1px 0 #000;
 }
 
 .poc-name:hover {
@@ -165,7 +175,8 @@ button:hover {
     transform: scale(0.95);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.favorites-filter{
+
+.favorites-filter {
     display: flex;
     align-items: baseline;
     justify-content: center;
@@ -173,11 +184,13 @@ button:hover {
     margin-bottom: 25px;
 
 }
-.loading-container{
+
+.loading-container {
     display: flex;
     justify-content: center;
     margin-top: 7em;
 }
+
 .no-data {
     text-align: center;
     font-size: 20px;

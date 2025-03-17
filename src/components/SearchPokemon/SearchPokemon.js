@@ -3,6 +3,18 @@ import { observer } from 'mobx-react';
 import pokemonStore from '../../stores/PokemonStore';
 import './SearchPokemon.css';
 
+/**
+ * SearchPokemon Component
+ *
+ * This component provides a search functionality for Pokémon.
+ * It allows users to enter a Pokémon name and fetch relevant details.
+ *
+ * Features:
+ * - Uses local state to track the search input.
+ * - Updates `pokemonStore` to enable or disable search mode.
+ * - Calls the `fetchPokemon` function with the search query.
+ * - Displays a toast message for user feedback.
+ */
 const SearchPokemon = observer(() => {
     const [search, setSearch] = React.useState('');
     const handleSearch = (e) => {

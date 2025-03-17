@@ -42,5 +42,5 @@
     }
 }
 button.gold-button {
-    animation: growShrink 2s ease-in-out infinite;
+    animation: growShrink 1.5s ease-in-out infinite;
 }

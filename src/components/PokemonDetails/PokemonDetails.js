@@ -3,7 +3,18 @@ import { observer } from 'mobx-react';
 import pokemonStore from "../../stores/PokemonStore";
 import '../Pokemon/Pokemon.css';
 import { Spin } from 'antd';
-
+/**
+ * PokemonDetails Component
+ *
+ * This component displays detailed information about a selected Pokémon.
+ * It retrieves data from `pokemonStore`, including abilities, types, and evolution details.
+ *
+ * Features:
+ * - Shows a loading spinner while Pokémon details are being fetched.
+ * - Displays the selected Pokémon's name, abilities, types, and evolution chain.
+ * - Uses `useMemo` to optimize rendering of ability and type lists.
+ * - Includes a close button to hide the details.
+ */
 const PokemonDetails = observer(({ setShowDetails }) => {
     const { isloadingDetails, selectedPokemon } = pokemonStore;
 
