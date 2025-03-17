@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
-import pokemonStore from '../PokemonStore';
+import pokemonStore from '../../stores/PokemonStore';
 import './SearchPokemon.css';
 
 const SearchPokemon = observer(() => {
@@ -13,11 +13,6 @@ const SearchPokemon = observer(() => {
                     placeholder="Enter the full Pokémon name..."
                     value={pokemonStore.searchQuery}
                     onChange={(e) => pokemonStore.setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            pokemonStore.fetchPokemon();
-                        }
-                    }}
                     className="search-input"
                 />
                 <button onClick={() => pokemonStore.fetchPokemon()} className="search-button">
@@ -25,7 +20,6 @@ const SearchPokemon = observer(() => {
                 </button>
             </div>
 
-            {/* Display Toast message */}
             {pokemonStore.toastMessage && (
                 <div className={`toast ${pokemonStore.toastType}`}>
                     {pokemonStore.toastMessage}

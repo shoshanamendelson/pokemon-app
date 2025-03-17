@@ -4,7 +4,7 @@ import PokemonList from "./components/Pokemon/PokemonList";
 
 function App() {
   return (
-<PokemonList/>
+    <PokemonList/>
   );
 }
 

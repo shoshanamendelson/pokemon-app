@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { observer } from 'mobx-react';
-import pokemonStore from "../PokemonStore";
+import pokemonStore from "../../stores/PokemonStore";
 import '../Pokemon/Pokemon.css';
 import { Spin } from 'antd';
 

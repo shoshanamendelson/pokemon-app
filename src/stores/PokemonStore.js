@@ -1,4 +1,4 @@
-import { makeAutoObservable, observable, action } from 'mobx';
+import {makeAutoObservable, observable, action} from 'mobx';
 import {
     fetchPokemonFromApi,
     fetchFavoritesFromApi,
@@ -11,11 +11,12 @@ class PokemonStore {
     pokemonList = [];
     favorites = [];
     selectedPokemon = null;
-    isLoading = false;
+    isLoading = true;
     isLoadingDetails = false;
     searchQuery = '';
     toastMessage = ''; // Stores the toast message
     toastType = ''; // Stores the type of the toast (e.g. success or error)
+    page = 1;
 
     constructor() {
         makeAutoObservable(this, {
@@ -38,6 +39,7 @@ class PokemonStore {
             setToastMessage: action,
             setToastType: action,
             showToast: action,
+            page: observable,
         });
     }
 
@@ -73,27 +75,27 @@ class PokemonStore {
     }
 
     // Fetch Pokémon list from the API
-    async fetchPokemon() {
+    async fetchPokemon(fromPagination = false) {
         this.setLoading(true);
         try {
-            const data = await fetchPokemonFromApi(this.searchQuery);
+            const offset = (this.page - 1) * 15; // Calculate offset based on page
+            const data = await fetchPokemonFromApi(this.searchQuery, 15, offset);
             const results = Array.isArray(data.results) ? data.results : [data];
+            if (this.searchQuery) {
+                this.pokemonList = results;
+            } else {
+                this.pokemonList = [...this.pokemonList, ...results]
 
-            const pokemonWithFavorite = results.map(pokemon => ({
-                ...pokemon,
-                isFavorite: this.favorites.includes(pokemon.name),
-            }));
-
-            this.pokemonList = pokemonWithFavorite;
+            }
+            this.page++;
         } catch (error) {
             this.showToast(`${error.message}`, "error");
             console.error("No pokemons found", error);
-            this.pokemonList= [];
+            this.pokemonList = [];
         } finally {
             this.setLoading(false);
         }
     }
-
 
 
     // Fetch the list of favorites from the backend

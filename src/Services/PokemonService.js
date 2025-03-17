@@ -1,8 +1,9 @@
 
-export const fetchPokemonFromApi = async (searchQuery = "") => {
+export const fetchPokemonFromApi = async (searchQuery = "", limit = 10, offset = 0) => {
+    // If there's a search query, include it in the URL
     const url = searchQuery
-        ? `http://localhost:5000/api/pokemon/${searchQuery}`
-        : "http://localhost:5000/api/pokemon";
+        ? `http://localhost:5000/api/pokemon/${searchQuery}?limit=${limit}&offset=${offset}`
+        : `http://localhost:5000/api/pokemon?limit=${limit}&offset=${offset}`;
 
     const res = await fetch(url);
 
@@ -12,6 +13,7 @@ export const fetchPokemonFromApi = async (searchQuery = "") => {
 
     return await res.json();
 };
+
 
 
 export const fetchFavoritesFromApi = async () => {
