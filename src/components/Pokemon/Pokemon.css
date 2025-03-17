@@ -21,7 +21,8 @@ body {
 .list-container{
     max-height: 550px;
     overflow: auto;
-    margin-left: 18em;
+    width: 440px;
+    margin: auto;
 }
 h2 {
     margin-top: 30px;

@@ -29,3 +29,18 @@
 .favorites-icon.filled {
     color: gold;
 }
+
+@keyframes growShrink {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+   100% {
+        transform: scale(1);
+    }
+}
+button.gold-button {
+    animation: growShrink 2s ease-in-out infinite;
+}

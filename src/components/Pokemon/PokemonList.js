@@ -82,6 +82,7 @@ const PokemonList = observer(() => {
                             <button
                                 onClick={() => toggleFavorite(pokemon)}
                                 style={{backgroundColor: pokemonStore.favorites.includes(pokemon.name) ? 'gold' : 'lightgray'}}
+                                className={pokemonStore.favorites.includes(pokemon.name) ? 'gold-button' : ''}
                             >
                                 {pokemonStore.favorites.includes(pokemon.name) ? '⭐' : <StarOutlined/>}
                             </button>
