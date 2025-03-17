@@ -15,10 +15,10 @@ import FavoritesFilter from "../FavoritesFilter/FavoritesFilter";
 const PokemonList = observer(() => {
     const [showDetails, setShowDetails] = useState(false);
     const [showFavoritesOnly, setShowFavoritesOnly] = useState(false); // State for toggling favorites filter
-    const [sentryRef, { rootRef }] = useInfiniteScroll({
+    const [sentryRef, {rootRef}] = useInfiniteScroll({
         loading: pokemonStore.isLoading,
-        hasNextPage:  pokemonStore.pokemonList.length<150&&!pokemonStore.searchMode,
-        onLoadMore: ()=>pokemonStore.fetchPokemon(),
+        hasNextPage: pokemonStore.pokemonList.length < 150 && !pokemonStore.searchMode,
+        onLoadMore: () => pokemonStore.fetchPokemon(),
         rootMargin: '0px 0px 50px 0px',
     })
     useEffect(() => {
@@ -32,9 +32,9 @@ const PokemonList = observer(() => {
         setShowDetails(true); // Show Pokémon details after selecting a Pokémon
     };
 
-    const renderLoading = () => (
-        <div className="spinner-container">
-            <Spin size="large" tip="Loading Pokémon..." className="red-spinner" />
+    const renderLoading = (fromScroll) => (
+        <div className={fromScroll ? 'spinner-scroll' : "spinner-container"}>
+            <Spin size="large" tip="Loading Pokémon..." className="red-spinner"/>
         </div>
     );
 
@@ -43,11 +43,10 @@ const PokemonList = observer(() => {
     };
 
     const getFilteredPokemonList = () => {
-            return pokemonStore?.pokemonList?.filter((pokemon) =>
-                pokemonStore.favorites.includes(pokemon.name)
-            );
+        return pokemonStore?.pokemonList?.filter((pokemon) =>
+            pokemonStore.favorites.includes(pokemon.name)
+        );
     };
-
 
 
     const renderPokemonList = () => {
@@ -82,14 +81,15 @@ const PokemonList = observer(() => {
 
                             <button
                                 onClick={() => toggleFavorite(pokemon)}
-                                style={{ backgroundColor: pokemonStore.favorites.includes(pokemon.name) ? 'gold' : 'lightgray' }}
+                                style={{backgroundColor: pokemonStore.favorites.includes(pokemon.name) ? 'gold' : 'lightgray'}}
                             >
-                                {pokemonStore.favorites.includes(pokemon.name) ? '⭐' : <StarOutlined />}
+                                {pokemonStore.favorites.includes(pokemon.name) ? '⭐' : <StarOutlined/>}
                             </button>
                         </li>
                     ))}
                 </ul>
-                {hasMore && <div ref={sentryRef} style={{ height: '10px' }} />}
+                {pokemonStore.isLoading && renderLoading(true)}
+                {hasMore && <div ref={sentryRef} style={{height: '50px'}}/>}
             </div>
         );
     };
@@ -108,13 +108,21 @@ const PokemonList = observer(() => {
             <PokemonDetails setShowDetails={setShowDetails}/>
         )
     );
+    const title=()=>(
+        <div>
+            <h1 className="title">
+                Pokemon List
+                <WavesSvg width="50px" height="50px"/>
+            </h1>
+        </div>
+    )
     return (
         <div>
-            <h1 className='title'>Pokemon List {<WavesSvg width="50px%" height="50px"/>} </h1>
+            {title()}
             <FavoritesFilter
-                showFavoritesOnly={showFavoritesOnly}
-                toggleFavorites={toggleFavorites}
-            />
+            showFavoritesOnly={showFavoritesOnly}
+            toggleFavorites={toggleFavorites}
+        />
             {renderPokemonList()}
             {renderPokemonDetails()}
         </div>

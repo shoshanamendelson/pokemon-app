@@ -75,12 +75,11 @@ class PokemonStore {
     }
 
     // Fetch Pokémon list from the API
-    async fetchPokemon(s='') {
-        console.log(s)
+    async fetchPokemon(search='') {
         this.setLoading(true);
         try {
             const offset = (this.page - 1) * 15; // Calculate offset based on page
-            const data = await fetchPokemonFromApi(s, 15, offset);
+            const data = await fetchPokemonFromApi(search, 15, offset);
             const results = Array.isArray(data.results) ? data.results : [data];
             if (this.searchMode) {
                 this.pokemonList = results;
