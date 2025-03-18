@@ -16,12 +16,17 @@ import './SearchPokemon.css';
  * - Displays a toast message for user feedback.
  */
 const SearchPokemon = observer(() => {
+
     const [search, setSearch] = React.useState('');
     const handleSearch = (e) => {
+        pokemonStore.searchData = [];
         const query = e.target.value;
         setSearch(query);
-        pokemonStore.setSearchMode(query !== '');
+        if (query === "") {
+            pokemonStore.setSearchMode(false);
+        }
     };
+
     return (
         <div className="search-container">
             <div className="search-input-container">
@@ -32,6 +37,7 @@ const SearchPokemon = observer(() => {
                     value={search}
                     onChange={(e) => handleSearch(e)}
                     className="search-input"
+                    onKeyDown={(e) => e.key === "Enter" && pokemonStore.fetchPokemon(search)}
                 />
                 <button onClick={() => pokemonStore.fetchPokemon(search)} className="search-button">
                     Search

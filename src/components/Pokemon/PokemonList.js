@@ -65,8 +65,8 @@ const PokemonList = observer(() => {
     /**
      * Returns a filtered list containing only favorite Pokémon.
      */
-    const getFilteredPokemonList = () => {
-        return pokemonStore?.pokemonList?.filter((pokemon) =>
+    const getFilteredPokemonList = (data) => {
+        return data?.filter((pokemon) =>
             pokemonStore.favorites.includes(pokemon.name)
         );
     };
@@ -76,15 +76,21 @@ const PokemonList = observer(() => {
      * Supports infinite scrolling and filtering favorites.
      */
     const renderPokemonList = () => {
-        const pokemonList = showFavoritesOnly ? getFilteredPokemonList() : pokemonStore.pokemonList;
+        // const pokemonList = pokemonStore.searchMode
+        //     ? pokemonStore.searchData
+        //     : showFavoritesOnly
+        //         ? getFilteredPokemonList()
+        //         : pokemonStore.pokemonList;
+        const data = pokemonStore.searchMode ? pokemonStore.searchData : pokemonStore.pokemonList;
+        const pokemonList = showFavoritesOnly ? getFilteredPokemonList(data) : data;
         const hasMore =
             pokemonStore.pokemonList.length < 120 &&
             !pokemonStore.searchMode &&
             !pokemonStore.isLoading &&
             !showFavoritesOnly;
 
-        const isEmptyList = pokemonList?.length === 0 && !pokemonStore.isLoading;
-        const isLoadingInitial = pokemonStore.isLoading && pokemonStore.pokemonList?.length === 0;
+        const isEmptyList = pokemonList?.length === 0 && !pokemonStore.isLoading
+        const isLoadingInitial = pokemonStore.isLoading && pokemonStore.pokemonList?.length === 0||pokemonStore.loadingSearch;
 
         if (isEmptyList) {
             return <div className="no-data">No Pokémon found! 😢</div>;

@@ -17,6 +17,8 @@ class PokemonStore {
     toastMessage = ''; // Stores the toast message
     toastType = ''; // Stores the type of the toast (e.g. success or error)
     page = 1;
+    searchData = [];
+    loadingSearch = false;
 
     constructor() {
         makeAutoObservable(this, {
@@ -40,6 +42,9 @@ class PokemonStore {
             setToastType: action,
             showToast: action,
             page: observable,
+            searchData:observable,
+            loadingSearch:observable,
+            setLoadingSearch:action,
         });
     }
 
@@ -50,6 +55,9 @@ class PokemonStore {
      */
     setSearchMode(mode) {
         this.searchMode = mode;
+    }
+    setLoadingSearch(mode) {
+        this.loadingSearch = mode;
     }
 
     /**
@@ -106,23 +114,28 @@ class PokemonStore {
      * @param {string} [search=''] - The Pokémon name to search for (optional).
      */
     async fetchPokemon(search = '') {
+        pokemonStore.setSearchMode(search !== '');
         this.setLoading(true);
         try {
             const offset = (this.page - 1) * 15; // Calculate offset based on page
             const data = await fetchPokemonFromApi(search, 15, offset);
             const results = Array.isArray(data.results) ? data.results : [data];
             if (this.searchMode) {
-                this.pokemonList = results;
+                this.setLoadingSearch(true);
+                this.searchData = results;
             } else {
                 this.pokemonList = [...this.pokemonList, ...results];
+                this.page++;
+                this.searchData = [];
             }
-            this.page++;
         } catch (error) {
+            this.searchMode ? this.showToast(`No Pokémon found with the name ${search}`, "error"):
             this.showToast(`${error.message}`, "error");
             console.error("No Pokémon found", error);
             this.pokemonList = [];
         } finally {
             this.setLoading(false);
+            this.setLoadingSearch(false);
         }
     }
 
